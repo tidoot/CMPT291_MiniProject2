@@ -1,0 +1,5 @@
+#!/bin/bash
+sort -u -o terms.txt terms.txt
+sort -u -n -o recs.txt recs.txt
+sort -u -o emails.txt emails.txt
+sort -u -o dates.txt dates.txt

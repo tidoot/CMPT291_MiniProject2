@@ -49,10 +49,12 @@ def replaceSpecial(line):
     line = line.replace('&amp;', '&')
     line = line.replace('&apos;', "'")
     line = line.replace('&quot;', '"')
+    line = line.replace('&#10;', '')
     
-    alphabet = string.ascii_lowercase + '-' + ' '
+    
+    alphanumeric = string.ascii_lowercase + '0123456789' + '-' + ' ' + '_' 
     for letter in line:
-        if letter.lower() not in alphabet:
+        if letter.lower() not in alphanumeric:
             line = line.replace(letter, ' ')
     return line
     
