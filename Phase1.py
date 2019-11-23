@@ -100,7 +100,7 @@ def recsTxt(rowID,rec):
     if len(rec) != 0:
         recs.write(rowID + ":" + rec +"\n")
     recs.close()    
-    pass
+
     
 if __name__ == '__main__':
     main()
