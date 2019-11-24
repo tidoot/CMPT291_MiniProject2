@@ -51,8 +51,6 @@ HEADER=END
  b-can
  27
  b-can
- 27
- b-can
  33
  b-can
  34
@@ -84,8 +82,6 @@ HEADER=END
  13
  b-cpa
  11
- b-daily
- 27
  b-daily
  27
  b-dave
@@ -142,8 +138,6 @@ HEADER=END
  33
  b-fromgov
  13
- b-gas
- 27
  b-gas
  27
  b-get
@@ -241,11 +235,11 @@ HEADER=END
  b-payment
  12
  b-phillip
- 5
- b-phillip
  12
  b-phillip
  33
+ b-phillip
+ 5
  b-phone
  26
  b-plan
@@ -260,8 +254,6 @@ HEADER=END
  33
  b-possible
  34
- b-property
- 33
  b-property
  33
  b-regarding
@@ -325,37 +317,17 @@ HEADER=END
  b-that
  13
  b-the
- 5
- b-the
- 5
- b-the
- 5
- b-the
- 12
- b-the
  12
  b-the
  23
  b-the
  27
  b-the
- 27
- b-the
- 27
- b-the
- 27
- b-the
- 33
- b-the
- 33
- b-the
- 33
- b-the
  33
  b-the
  34
  b-the
- 34
+ 5
  b-think
  11
  b-this
@@ -413,15 +385,11 @@ HEADER=END
  b-you
  12
  b-you
- 12
- b-you
  23
  b-you
  26
  b-you
  27
- b-you
- 34
  b-you
  34
  b-youphillip

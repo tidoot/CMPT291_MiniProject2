@@ -33,6 +33,8 @@ def main():
             termsTxt("b", body, rowID)
             emailsTxt("from", from1, rowID)
             emailsTxt("to", to, rowID)
+            emailsTxt("cc", cc, rowID)
+            emailsTxt("bcc", bcc, rowID)
             dateTxt(date,rowID)
             recsTxt(rowID,line)
     

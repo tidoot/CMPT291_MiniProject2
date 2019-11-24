@@ -11,11 +11,11 @@ def main():
     loadDB('emails.txt','em.idx','btree')
     loadDB('dates.txt','da.idx','btree')
     
-    #After database is made, it can be converted to txt form to check:
-    #check('re.idx','rtest.txt')
-    #check('te.idx','ttest.txt')
-    #check('em.idx','etest.txt')
-    #check('da.idx','dtest.txt')
+    #After database is made, it can be converted to txt form to check. the second arguement is the file it will create
+    check('re.idx','rtest.txt')
+    check('te.idx','ttest.txt')
+    check('em.idx','etest.txt')
+    check('da.idx','dtest.txt')
     
 
 def sortFiles():

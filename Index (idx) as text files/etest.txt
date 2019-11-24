@@ -4,10 +4,12 @@ type=btree
 duplicates=1
 db_pagesize=8192
 HEADER=END
+ bcc-alb@cpuc.ca.gov
+ 13
+ cc-alb@cpuc.ca.gov
+ 13
  from-aod@newsdata.com
  13
- from-phillip.allen@enron.com
- 5
  from-phillip.allen@enron.com
  11
  from-phillip.allen@enron.com
@@ -24,16 +26,18 @@ HEADER=END
  33
  from-phillip.allen@enron.com
  34
+ from-phillip.allen@enron.com
+ 5
  to-bs_stone@yahoo.com
  12
  to-christopher.calger@enron.com
  23
  to-cindy.cicchetti@enron.com
- 5
- to-cindy.cicchetti@enron.com
  19
  to-cindy.cicchetti@enron.com
  23
+ to-cindy.cicchetti@enron.com
+ 5
  to-david.delainey@enron.com
  5
  to-jsmith@austintx.com
