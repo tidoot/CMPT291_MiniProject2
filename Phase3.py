@@ -166,8 +166,8 @@ def parseUserInput(line):
     returnGroup = []
     for group in groupsAll:
         splitGroup = re.split(':|>|<|>=|<=',group)
-        for i in splitGroup:
-            i = i.strip()
+        splitGroup[0] = splitGroup[0].strip()
+        splitGroup[1] = splitGroup[1].strip()
         returnGroup.append(splitGroup)
     return returnGroup
         
