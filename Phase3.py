@@ -156,13 +156,17 @@ def parseUserInput(line):
     cc = re.findall('cc[ ]*:[ ]*[^ ]*', line)
     for match in cc:
         line = line.replace(match,'')
+        
     line = line.strip()
-    remainingSearch = line.split(' ')
-    for i in range(len(remainingSearch)):
-        if remainingSearch[i].isalpha():
-            remainingSearch[i] = 'general:' + remainingSearch[i]
-    groupsAll = subject + body + fromEmail + toEmail + dateEq + dateGr + dateLs + dateGrEq + dateLsEq + bcc + cc + remainingSearch
     
+    groupsAll = subject + body + fromEmail + toEmail + dateEq + dateGr + dateLs + dateGrEq + dateLsEq + bcc + cc
+    if line != '':
+        remainingSearch = line.split(' ')
+        for i in range(len(remainingSearch)):
+            if remainingSearch[i].isalpha():
+                remainingSearch[i] = 'general:' + remainingSearch[i]
+        groupsAll = groupsAll + remainingSearch
+    groupsAll = list(filter(lambda a: a != '', groupsAll))
     returnGroup = []
     for group in groupsAll:
         splitGroup = re.split(':|>|<|>=|<=',group)
@@ -170,6 +174,9 @@ def parseUserInput(line):
         splitGroup[1] = splitGroup[1].strip()
         returnGroup.append(splitGroup)
     return returnGroup
+        
+
+
         
     
 #if __name__ == '__main__':
