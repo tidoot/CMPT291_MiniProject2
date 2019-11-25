@@ -36,13 +36,13 @@ def main():
     
     def processQuery(answer):
         # NEED TO WORK ON THIS PART
-    #Processes string to pass to getRecords
+        #Processes string to pass to getRecords
         getRecords(idx,answer)
        
         
     def getRecords(idx,answer):
         # NEED TO WORK ON THIS PART
-    #Accesses the database and retursn the record
+        #Accesses the database and retursn the record
         database = db.DB()
         curs = database.cursor()
         database.open(idx)        
