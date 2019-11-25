@@ -57,11 +57,16 @@ def rangeSearch(start, end):
         result = curs.next()
         
 def getSubject():
+    database = db.DB()
+    curs = database.cursor()
+    database.open(idx)         
     subStart = input("Enter Start Subject")
     subEnd = input("Enter End Subject, enter nothing for no end")
-    idxLst = rangeSearch(subjectStart, subjectEnd)
+    idxLst = rangeSearch(subStart, subEnd)
     print(idxLst)
     #valueLst = fileGet(idxLst)
+    curs.close()
+    database.close()
 
 
 if __name__ == '__main__':
