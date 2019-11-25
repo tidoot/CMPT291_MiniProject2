@@ -4,6 +4,7 @@ import subprocess
 def main():
     quit = False
     outputFull = False
+    getSubject()
     
     while not quit:
         answer = input('Type "output=full" to view the full record. \nType "output=brief" to return to default view. \nType "q" to quit. \nPlease enter your queries: ')
@@ -18,8 +19,7 @@ def main():
         else:
             record = processQuery(answer)
             print(record)
-
-        
+    
     
     def processQuery(answer):
         # NEED TO WORK ON THIS PART
@@ -42,7 +42,26 @@ def main():
             return record
         elif outputFull == True:
             #Prints full record
-            return record      
+            return record  
+        
+def rangeSearch(start, end):
+    idxLst = []
+    result = curs.set_range(start.encode("utf-8"))
+    while(result != None):
+        #Checking the end condition: If the student's name comes after(or equal to) Ending_Name
+        if(str(result[0].decode("utf-8")[0:len(Ending_Name)])>=Ending_Name): 
+            break
+            
+        print("Name: " + str(result[0].decode("utf-8")) + ", Mark: " + str(result[1].decode("utf-8")))
+        idxList.append(result[0])
+        result = curs.next()
+        
+def getSubject():
+    subStart = input("Enter Start Subject")
+    subEnd = input("Enter End Subject, enter nothing for no end")
+    idxLst = rangeSearch(subjectStart, subjectEnd)
+    print(idxLst)
+    #valueLst = fileGet(idxLst)
 
 
 if __name__ == '__main__':
