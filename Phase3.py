@@ -5,7 +5,18 @@ import re
 def main():
     quit = False
     outputFull = False
-    getSubject()
+    
+    d1,d2,d3,d4 = db.DB()
+       
+    d4.open('da.idx', None, db.DB_BTREE, db.DB_CREATE)
+    d3.open('em.idx', None, db.DB_BTREE, db.DB_CREATE)
+    d2.open('te.idx', None, db.DB_BTREE, db.DB_CREATE)
+    d1.open('re.idx', None, db.DB_HASH, db.DB_CREATE)
+    
+    c1 = d1.cursor()
+    c2 = d2.cursor()
+    c3 = d3.cursor()
+    c4 = d4.cursor()
     
     while not quit:
         answer = input('Type "output=full" to view the full record. \nType "output=brief" to return to default view. \nType "q" to quit. \nPlease enter your queries: ')
@@ -50,8 +61,10 @@ def getSubject():
     subject = input("Enter Subject")
     pattern = "<subj>" + subject
     re.findall(pattern, filetext)
-    
 
+def getKey(idxLst):
+    for idx in idxLst:
+        db3.get(idx)
 
 if __name__ == '__main__':
     main()
