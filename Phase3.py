@@ -1,6 +1,7 @@
 from bsddb3 import db
 import subprocess
 import re
+import time
 
 def main():
     quit = False
@@ -15,7 +16,7 @@ def main():
             print('-------------\nOutput has been changed to full view.\n')
         elif answer == 'output=brief':
             outputFull = False
-            print('-------------\nOutput has been changed to briew view.\n')
+            print('-------------\nOutput has been changed to brief view.\n')
         elif answer == 'q':
             quit=True
         else:
@@ -26,30 +27,41 @@ def main():
 def processQuery(answer,outputFull):
     # NEED TO WORK ON THIS PART
 #Processes string to pass to getRecords
-    getRecords(key,data,outputFull)
-       
-        
-def getRecords(key,data,outputFull):
-    # NEED TO WORK ON THIS PART
-#Accesses the database and retursn the record
-    d1,d2,d3,d4 = db.DB()
-    d1.set_flags(db.DB_DUP)
-    d2.set_flags(db.DB_DUP)
-    d3.set_flags(db.DB_DUP)
-    d4.set_flags(db.DB_DUP)
-       
-    d4.open('da.idx', None, db.DB_BTREE, db.DB_CREATE)
-    d3.open('em.idx', None, db.DB_BTREE, db.DB_CREATE)
-    d2.open('te.idx', None, db.DB_BTREE, db.DB_CREATE)
-    d1.open('re.idx', None, db.DB_HASH, db.DB_CREATE)
+    if outputFull == False:
+        getRecordsBrief(key,data)
+        return record
+    else:
+        getRecordsFull(key,data)
+        return record
     
-    c1 = d1.cursor()
-    c2 = d2.cursor()
-    c3 = d3.cursor()
-    c4 = d4.cursor()
+        
+def getRecordsBrief(key,data):
+    # NEED TO WORK ON THIS PART
+#Accesses the database and returns the record
+    da = db.DB()
+    em = db.DB()
+    te = db.DB()
+    re = db.DB()
+    
+    da.set_flags(db.DB_DUP)
+    em.set_flags(db.DB_DUP)
+    te.set_flags(db.DB_DUP)
+    re.set_flags(db.DB_DUP)
+       
+    da.open('da.idx', None, db.DB_BTREE, db.DB_CREATE)
+    em.open('em.idx', None, db.DB_BTREE, db.DB_CREATE)
+    te.open('te.idx', None, db.DB_BTREE, db.DB_CREATE)
+    re.open('re.idx', None, db.DB_HASH, db.DB_CREATE)
+    
+    cda = da.cursor()
+    cem = em.cursor()
+    cte = te.cursor()
+    cre = re.cursor()
     
 
     if key == 'subj:':
+        result = te.get('s-'+data)
+        
         pass
     elif key == 'body:':
         pass
@@ -108,5 +120,5 @@ def getKey(idxLst):
     for idx in idxLst:
         db3.get(idx)
 
-if __name__ == '__main__':
-    main()
+#if __name__ == '__main__':
+    #main()
