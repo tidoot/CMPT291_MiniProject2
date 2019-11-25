@@ -157,24 +157,41 @@ def parseUserInput(line):
     for match in cc:
         line = line.replace(match,'')
         
-    line = line.strip()
-    
-    groupsAll = subject + body + fromEmail + toEmail + dateEq + dateGr + dateLs + dateGrEq + dateLsEq + bcc + cc
-    if line != '':
-        remainingSearch = line.split(' ')
-        for i in range(len(remainingSearch)):
-            if remainingSearch[i].isalpha():
-                remainingSearch[i] = 'general:' + remainingSearch[i]
-        groupsAll = groupsAll + remainingSearch
-    groupsAll = list(filter(lambda a: a != '', groupsAll))
-    returnGroup = []
-    for group in groupsAll:
-        splitGroup = re.split(':|>|<|>=|<=',group)
-        splitGroup[0] = splitGroup[0].strip()
-        splitGroup[1] = splitGroup[1].strip()
-        returnGroup.append(splitGroup)
-    return returnGroup
+        line = line.strip()
         
+        groupsAll = subject + body + fromEmail + toEmail + dateEq + dateGr + dateLs + dateGrEq + dateLsEq + bcc + cc
+        if line != '':
+            remainingSearch = line.split(' ')
+            for i in range(len(remainingSearch)):
+                if remainingSearch[i] != '':
+                    remainingSearch[i] = 'general:' + remainingSearch[i]
+            groupsAll = groupsAll + remainingSearch
+        groupsAll = list(filter(lambda a: a != '', groupsAll))
+        returnGroup = []
+        for group in groupsAll:
+            if ':' in group:
+                splitGroup = group.split(":")
+                splitGroup[0] = splitGroup[0].strip() + ":"
+                splitGroup[1] = splitGroup[1].strip()
+            if '>' in group:
+                splitGroup = group.split(">")
+                splitGroup[0] = splitGroup[0].strip() + ">"
+                splitGroup[1] = splitGroup[1].strip()    
+            if '<' in group:
+                splitGroup = group.split("<")
+                splitGroup[0] = splitGroup[0].strip() + "<"
+                splitGroup[1] = splitGroup[1].strip()
+            if '<=' in group:
+                splitGroup = group.split("<=")
+                splitGroup[0] = splitGroup[0].strip() + "<="
+                splitGroup[1] = splitGroup[1].strip()
+            if '>=' in group:
+                splitGroup = group.split(">=")
+                splitGroup[0] = splitGroup[0].strip() + ">="
+                splitGroup[1] = splitGroup[1].strip()            
+            returnGroup.append(splitGroup)
+        return returnGroup
+
 
 
         
