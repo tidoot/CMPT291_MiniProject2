@@ -20,6 +20,7 @@ def main():
     
     while not quit:
         answer = input('Type "output=full" to view the full record. \nType "output=brief" to return to default view. \nType "q" to quit. \nPlease enter your queries: ')
+        answer = answer.lower()
         if answer == 'output=full':
             outputFull = True
             print('-------------\nOutput has been changed to full view.\n')
