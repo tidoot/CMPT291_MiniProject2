@@ -6,6 +6,8 @@ import time
 def main():
     quit = False
     outputFull = False
+    line = 'subj : kenneth.shulklapper@enron.com  to:keith.holst@enron.com subj:jennifer.medcalf@enron.com confidential shares date>2001/03/10'
+    print(parseUserInput(line))
     
     
     while not quit:
@@ -119,6 +121,56 @@ def getSubject():
 def getKey(idxLst):
     for idx in idxLst:
         db3.get(idx)
-
+        
+def parseUserInput(line):
+    subject = re.findall('subj[ ]*:[ ]*[^ ]*', line)
+    for match in subject:
+        line = line.replace(match,'')
+    body = re.findall('body[ ]*:[ ]*[^ ]*', line)
+    for match in body:
+        line = line.replace(match,'')    
+    fromEmail = re.findall('from[ ]*:[ ]*[^ ]*', line)
+    for match in fromEmail:
+        line = line.replace(match,'')    
+    toEmail = re.findall('to[ ]*:[ ]*[^ ]*', line)
+    for match in toEmail:
+        line = line.replace(match,'')    
+    dateEq = re.findall('date[ ]*:[ ]*[^ ]*', line)
+    for match in dateEq:
+        line = line.replace(match,'')    
+    dateGr = re.findall('date[ ]*>[ ]*[^ ]*', line)
+    for match in dateGr:
+        line = line.replace(match,'')    
+    dateLs = re.findall('date[ ]*<[ ]*[^ ]*', line)
+    for match in dateLs:
+        line = line.replace(match,'')    
+    dateGrEq = re.findall('date[ ]*>=[ ]*[^ ]*', line)
+    for match in dateGrEq:
+        line = line.replace(match,'')    
+    dateLsEq = re.findall('date[ ]*<=[ ]*[^ ]*', line)
+    for match in dateLsEq:
+        line = line.replace(match,'')    
+    bcc = re.findall('bcc[ ]*:[ ]*[^ ]*', line)
+    for match in bcc:
+        line = line.replace(match,'')    
+    cc = re.findall('cc[ ]*:[ ]*[^ ]*', line)
+    for match in cc:
+        line = line.replace(match,'')
+    line = line.strip()
+    remainingSearch = line.split(' ')
+    for i in range(len(remainingSearch)):
+        if remainingSearch[i].isalpha():
+            remainingSearch[i] = 'general:' + remainingSearch[i]
+    groupsAll = subject + body + fromEmail + toEmail + dateEq + dateGr + dateLs + dateGrEq + dateLsEq + bcc + cc + remainingSearch
+    
+    returnGroup = []
+    for group in groupsAll:
+        splitGroup = re.split(':|>|<|>=|<=',group)
+        for i in splitGroup:
+            i = i.strip()
+        returnGroup.append(splitGroup)
+    return returnGroup
+        
+    
 #if __name__ == '__main__':
     #main()
