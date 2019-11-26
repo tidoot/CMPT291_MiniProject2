@@ -348,10 +348,10 @@ b-want
 34
 b-way
 33
-b-west
-5
 b-west-wideprice
 13
+b-west
+5
 b-what
 23
 b-when

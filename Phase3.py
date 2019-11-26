@@ -6,10 +6,8 @@ import time
 def main():
     quit = False
     outputFull = False
-    line = 'subj : kenneth.shulklapper@enron.com  to:keith.holst@enron.com subj:jennifer.medcalf@enron.com confidential shares date>2001/03/10'
-    print(parseUserInput(line))
     
-    
+
     while not quit:
         answer = input('Type "output=full" to view the full record. \nType "output=brief" to return to default view. \nType "q" to quit. \nPlease enter your queries: ')
         answer = answer.lower()
@@ -22,19 +20,24 @@ def main():
         elif answer == 'q':
             quit=True
         else:
-            record = processQuery(answer)
-            print(record)
+            record = parseUserInput(answer)
+            #record is a list of search query lists e.g [[subj:gas][body:whale]]
+            if outputFull==False:
+                #start by getting first item as 'results'                
+                results = getRecordsBrief(record[0][0],record[0][1])
+                
+                for i in range(1, len(record)):
+                    #now get second-last items from record as 'r'
+                    r = getRecordsBrief(record[i][0],record[i][1])
+                    #new results are the results that are in both 'results and 'r'
+                    results = set(results).intersection(r)
+                    # do this for all search query to find something that matches all
+                print(record)
+            if outputFull==True:
+                pass
     
     
-def processQuery(answer,outputFull):
-    # NEED TO WORK ON THIS PART
-#Processes string to pass to getRecords
-    if outputFull == False:
-        getRecordsBrief(key,data)
-        return record
-    else:
-        getRecordsFull(key,data)
-        return record
+
     
         
 def getRecordsBrief(key,data):
@@ -62,11 +65,10 @@ def getRecordsBrief(key,data):
     
 
     if key == 'subj:':
-        result = te.get('s-'+data)
-        
         pass
     elif key == 'body:':
-        pass
+        results = rangeSearch('b-'+data,None,cte)
+        return results
     elif key == 'from:':
         pass
     elif key == 'to:':
@@ -157,42 +159,42 @@ def parseUserInput(line):
     for match in cc:
         line = line.replace(match,'')
         
-        line = line.strip()
-        
-        groupsAll = subject + body + fromEmail + toEmail + dateEq + dateGr + dateLs + dateGrEq + dateLsEq + bcc + cc
-        if line != '':
-            remainingSearch = line.split(' ')
-            for i in range(len(remainingSearch)):
-                if remainingSearch[i] != '':
-                    remainingSearch[i] = 'general:' + remainingSearch[i]
-            groupsAll = groupsAll + remainingSearch
-        groupsAll = list(filter(lambda a: a != '', groupsAll))
-        returnGroup = []
-        for group in groupsAll:
-            if ':' in group:
-                splitGroup = group.split(":")
-                splitGroup[0] = splitGroup[0].strip() + ":"
-                splitGroup[1] = splitGroup[1].strip()
-            if '>' in group:
-                splitGroup = group.split(">")
-                splitGroup[0] = splitGroup[0].strip() + ">"
-                splitGroup[1] = splitGroup[1].strip()    
-            if '<' in group:
-                splitGroup = group.split("<")
-                splitGroup[0] = splitGroup[0].strip() + "<"
-                splitGroup[1] = splitGroup[1].strip()
-            if '<=' in group:
-                splitGroup = group.split("<=")
-                splitGroup[0] = splitGroup[0].strip() + "<="
-                splitGroup[1] = splitGroup[1].strip()
-            if '>=' in group:
-                splitGroup = group.split(">=")
-                splitGroup[0] = splitGroup[0].strip() + ">="
-                splitGroup[1] = splitGroup[1].strip()            
-            returnGroup.append(splitGroup)
-        return returnGroup
+    line = line.strip()
+    
+    groupsAll = subject + body + fromEmail + toEmail + dateEq + dateGr + dateLs + dateGrEq + dateLsEq + bcc + cc
+    if line != '':
+        remainingSearch = line.split(' ')
+        for i in range(len(remainingSearch)):
+            if remainingSearch[i] != '':
+                remainingSearch[i] = 'general:' + remainingSearch[i]
+        groupsAll = groupsAll + remainingSearch
+    groupsAll = list(filter(lambda a: a != '', groupsAll))
+    returnGroup = []
+    for group in groupsAll:
+        if ':' in group:
+            splitGroup = group.split(":")
+            splitGroup[0] = splitGroup[0].strip() + ":"
+            splitGroup[1] = splitGroup[1].strip()
+        if '>' in group:
+            splitGroup = group.split(">")
+            splitGroup[0] = splitGroup[0].strip() + ">"
+            splitGroup[1] = splitGroup[1].strip()    
+        if '<' in group:
+            splitGroup = group.split("<")
+            splitGroup[0] = splitGroup[0].strip() + "<"
+            splitGroup[1] = splitGroup[1].strip()
+        if '<=' in group:
+            splitGroup = group.split("<=")
+            splitGroup[0] = splitGroup[0].strip() + "<="
+            splitGroup[1] = splitGroup[1].strip()
+        if '>=' in group:
+            splitGroup = group.split(">=")
+            splitGroup[0] = splitGroup[0].strip() + ">="
+            splitGroup[1] = splitGroup[1].strip()            
+        returnGroup.append(splitGroup)
+    return returnGroup
 
-def rangeSearch(start,end):
+def rangeSearch(start,end,curs):
     while(True):
         returnsList=[]
         Starting_Name = start
@@ -202,10 +204,8 @@ def rangeSearch(start,end):
         result = curs.set_range(Starting_Name.encode("utf-8")) 
        
         if(result != None):
-            print("Found:")
-        
             while(result != None):
-                #Checking the end condition: If the student's name comes after(or equal to) Ending_Name
+                #Checking the end condition: If the results comes after(or equal to) Ending_Name
                 if(str(result[0].decode("utf-8")[0:len(Ending_Name)])>=Ending_Name): 
                     return returnsList
                 returnsList = returnsList + result
@@ -215,5 +215,5 @@ def rangeSearch(start,end):
             return returnsList
         
     
-#if __name__ == '__main__':
-    #main()
+if __name__ == '__main__':
+    main()
