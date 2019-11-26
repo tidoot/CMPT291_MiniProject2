@@ -65,16 +65,20 @@ def getRecordsBrief(key,data):
     
 
     if key == 'subj:':
-        pass
+        results = rangeSearch('s-'+data,None,cte)
+        return results
     elif key == 'body:':
         results = rangeSearch('b-'+data,None,cte)
         return results
     elif key == 'from:':
-        pass
+        results = rangeSearch('from-'+data,None,cem)
+        return results
     elif key == 'to:':
-        pass
+        results = rangeSearch('to-'+data,None,cem)
+        return results
     elif key == 'date:':
-        pass
+        results = rangeSearch(data,None,cda)
+        return results
     elif key == 'date>':
         pass
     elif key == 'date<':
@@ -84,9 +88,11 @@ def getRecordsBrief(key,data):
     elif key == 'date<=':
         pass    
     elif key == 'bcc:':
-        pass
+        results = rangeSearch('bcc-'+data,None,cem)
+        return results
     elif key== 'cc:':
-        pass
+        results = rangeSearch('cc-'+data,None,cem)
+        return results
     elif '%' in data:
         pass
     else:
@@ -94,14 +100,14 @@ def getRecordsBrief(key,data):
     
 
     
-    c1.close()
-    c2.close()
-    c3.close()
-    c4.close()
-    d1.close()
-    d2.close()
-    d3.close()
-    d4.close()    
+    cda.close()
+    cem.close()
+    cre.close()
+    cte.close()
+    em.close()
+    te.close()
+    da.close()
+    re.close()
     
     # NEED TO WORK ON THIS PART
     if outputFull == False:
