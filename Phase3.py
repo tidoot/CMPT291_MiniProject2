@@ -30,7 +30,7 @@ def main():
                 
                 for i in results:
                     print(i[0]+', '+i[1])
-                print('\n')
+                print()
             if outputFull==True:
                 pass
     
