@@ -28,7 +28,7 @@ def parseFiles():
     termsDataList, termsKeyList = parseFile('terms.txt')
     emailsDataList, emailsKeyList = parseFile('emails.txt')
     datesDataList, datesKeyList = parseFile('dates.txt')
-    recsKeyList, recsDataList = parseFile('recs.txt') #recs is reversed key,data
+    recsDataList, recsKeyList = parseFile('recs.txt') #recs is reversed key,data
     
     #Changed the txt files to lines of alternating key and data pairs
     reformat(termsKeyList,termsDataList,'terms.txt')

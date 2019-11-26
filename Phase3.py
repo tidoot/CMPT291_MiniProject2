@@ -32,7 +32,8 @@ def main():
                     #new results are the results that are in both 'results and 'r'
                     results = set(results).intersection(r)
                     # do this for all search query to find something that matches all
-                print(record)
+                
+                print(results)
             if outputFull==True:
                 pass
     
@@ -63,9 +64,20 @@ def getRecordsBrief(key,data):
     cte = te.cursor()
     cre = re.cursor()
     
+    x=re.get(b'19')
+    print(x)
 
     if key == 'subj:':
-        pass
+        rowID = rangeSearch('s-'+data,'s-'+data,te,cte)
+        subj=[]
+        for rID in rowID:
+            #cre.set(str(rowID.decode("utf-8")))
+            #record = re.get("b'"+str(rID.decode("utf-8"))+"b")
+            record = re.get(rID)
+            subj.append(record)
+        results = rowID + subj
+        return results
+        #print(str(results.decode("utf-8")))
     elif key == 'body:':
         results = rangeSearch('b-'+data,None,cte)
         return results
@@ -110,15 +122,23 @@ def getRecordsBrief(key,data):
     elif outputFull == True:
         #Prints full record
         return record  
-    
+
+def getText(line,tag):
+    # Gets the text obtained between the given tag <tag></tag>
+    sTag = '<' + tag +'>'
+    eTag = '</' + tag +'>'
+    startIndex = line.find(sTag) + len(sTag)
+    endIndex = line.find(eTag)  
+    text = line[startIndex:endIndex]
+    return text
     
     
         
-def getSubject():
+def getSubject(subject):
     filetext = 'rtest.txt'.readall()
-    subject = input("Enter Subject")
     pattern = "<subj>" + subject
-    re.findall(pattern, filetext)
+    subjects = re.findall(pattern, filetext)
+    return subjects
 
 def getKey(idxLst):
     for idx in idxLst:
@@ -194,7 +214,7 @@ def parseUserInput(line):
         returnGroup.append(splitGroup)
     return returnGroup
 
-def rangeSearch(start,end,curs):
+def rangeSearch(start,end,database,curs):
     while(True):
         returnsList=[]
         Starting_Name = start
@@ -206,9 +226,12 @@ def rangeSearch(start,end,curs):
         if(result != None):
             while(result != None):
                 #Checking the end condition: If the results comes after(or equal to) Ending_Name
-                if(str(result[0].decode("utf-8")[0:len(Ending_Name)])>=Ending_Name): 
-                    return returnsList
-                returnsList = returnsList + result
+                if(str(result[0].decode("utf-8")[0:len(Ending_Name)])>Ending_Name): 
+                    break
+                #x=str(result[0].decode("utf-8"))
+                record = database.get(result[0])
+                #x=str(record.decode("utf-8"))
+                returnsList.append(record)
                 result = curs.next() 
             return returnsList
         else:
