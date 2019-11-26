@@ -201,24 +201,24 @@ def parseUserInput(line):
     return returnGroup
 
 def rangeSearch(start,end,curs):
-    if end:
-        while(True):
-            returnsList=[]        
-            result = curs.set_range(start.encode("utf-8")) 
+    while(True):
+        returnsList=[]
+        Starting_Name = start
+        Ending_Name = end
+        
+        #get the record that has the smallest key greater than or equal to the Starting Name:
+        result = curs.set_range(Starting_Name.encode("utf-8")) 
+       
+        if(result != None):
             while(result != None):
-                if(str(result[0].decode("utf-8")[0:len(end)])>=end): 
+                #Checking the end condition: If the results comes after(or equal to) Ending_Name
+                if(str(result[0].decode("utf-8")[0:len(Ending_Name)])>=Ending_Name): 
                     return returnsList
                 returnsList = returnsList + result
                 result = curs.next() 
             return returnsList
-    else: 
-        while(True):
-            returnsList=[]        
-            result = curs.set_range(start.encode("utf-8")) 
-            while(result != None):
-                returnsList = returnsList + result
-                result = curs.next() 
-            return returnsList    
+        else:
+            return returnsList
         
     
 if __name__ == '__main__':
