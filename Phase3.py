@@ -76,16 +76,26 @@ def getRecordsBrief(key,data):
             subject = getText(record.decode("utf-8"),'subj')
             subjList.append(subject)
         results = rowID + subjList
-
-        
-        
         return results
 
     elif key == 'body:':
-        results = rangeSearch('b-'+data,None,cte)
+        rowID = rangeSearch('b-'+data,'b-'+data,te,cte)
+        bodyList=[]
+        for rID in rowID:
+            record = re.get(rID.encode("utf-8"))
+            body = getText(record.decode("utf-8"),'subj')
+            bodyList.append(body)
+        results = rowID + bodyList
         return results
     elif key == 'from:':
-        pass
+        rowID = rangeSearch('from-'+data,'from-'+data,em,cem)
+        emailList=[]
+        for rID in rowID:
+            record = re.get(rID.encode("utf-8"))
+            email = getText(record.decode("utf-8"),'subj')
+            emailList.append(email)
+        results = rowID + emailList
+        return results
     elif key == 'to:':
         pass
     elif key == 'date:':
