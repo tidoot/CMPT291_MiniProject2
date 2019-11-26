@@ -114,22 +114,14 @@ def getRecordsBrief(key,data):
     
 
     
-    c1.close()
-    c2.close()
-    c3.close()
-    c4.close()
-    d1.close()
-    d2.close()
-    d3.close()
-    d4.close()    
-    
-    # NEED TO WORK ON THIS PART
-    if outputFull == False:
-        #Prints record in brief view
-        return record
-    elif outputFull == True:
-        #Prints full record
-        return record  
+    cem.close()
+    cte.close()
+    cda.close()
+    cre.close()
+    re.close()
+    da.close()
+    te.close()
+    em.close()
 
 def getText(line,tag):
     # Gets the text obtained between the given tag <tag></tag>
