@@ -24,21 +24,25 @@ def main():
             #record is a list of search query lists e.g [[subj:gas][body:whale]]
             if outputFull==False:
                 #start by getting first item as 'results'                
-                results = getRecordsBrief(record[0][0],record[0][1])
-                
-                for i in range(1, len(record)):
-                    #now get second-last items from record as 'r'
-                    r = getRecordsBrief(record[i][0],record[i][1])
-                    #new results are the results that are in both 'results and 'r'
-                    results = set(results).intersection(r)
-                    # do this for all search query to find something that matches all
+                results = intersect(record)
+                #for i in list:
+                    #i = str(i.decode("utf-8"))
                 
                 print(results)
             if outputFull==True:
                 pass
     
     
-
+def intersect(record):
+    #start by getting first item as 'results'                
+    results = getRecordsBrief(record[0][0],record[0][1])
+    for i in range(1, len(record)):
+        #now get second-last items from record as 'r'
+        r = getRecordsBrief(record[i][0],record[i][1])
+        #new results are the results that are in both 'results and 'r'
+        results = set(results).intersection(r)
+        # do this for all search query to find something that matches all   
+    return results
     
         
 def getRecordsBrief(key,data):
@@ -63,21 +67,20 @@ def getRecordsBrief(key,data):
     cem = em.cursor()
     cte = te.cursor()
     cre = re.cursor()
-    
-    x=re.get(b'19')
-    print(x)
 
     if key == 'subj:':
         rowID = rangeSearch('s-'+data,'s-'+data,te,cte)
-        subj=[]
+        subjList=[]
         for rID in rowID:
-            #cre.set(str(rowID.decode("utf-8")))
-            #record = re.get("b'"+str(rID.decode("utf-8"))+"b")
-            record = re.get(rID)
-            subj.append(record)
-        results = rowID + subj
+            record = re.get(rID.encode("utf-8"))
+            subject = getText(record.decode("utf-8"),'subj')
+            subjList.append(subject)
+        results = rowID + subjList
+
+        
+        
         return results
-        #print(str(results.decode("utf-8")))
+
     elif key == 'body:':
         results = rangeSearch('b-'+data,None,cte)
         return results
@@ -231,7 +234,7 @@ def rangeSearch(start,end,database,curs):
                 #x=str(result[0].decode("utf-8"))
                 record = database.get(result[0])
                 #x=str(record.decode("utf-8"))
-                returnsList.append(record)
+                returnsList.append(record.decode("utf-8"))
                 result = curs.next() 
             return returnsList
         else:
