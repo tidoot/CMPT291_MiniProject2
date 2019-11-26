@@ -28,7 +28,9 @@ def main():
                 #for i in list:
                     #i = str(i.decode("utf-8"))
                 
-                print(results)
+                for i in results:
+                    print(i[0]+', '+i[1])
+                print('\n')
             if outputFull==True:
                 pass
     
@@ -71,31 +73,24 @@ def getRecordsBrief(key,data):
     if key == 'subj:':
         rowID = rangeSearch('s-'+data,'s-'+data,te,cte)
         subjList=[]
+        results=[]
         for rID in rowID:
             record = re.get(rID.encode("utf-8"))
             subject = getText(record.decode("utf-8"),'subj')
-            subjList.append(subject)
-        results = rowID + subjList
+            results.append([rID,subject])
         return results
 
     elif key == 'body:':
         rowID = rangeSearch('b-'+data,'b-'+data,te,cte)
         bodyList=[]
+        results=[]
         for rID in rowID:
             record = re.get(rID.encode("utf-8"))
             body = getText(record.decode("utf-8"),'subj')
-            bodyList.append(body)
-        results = rowID + bodyList
+            results.append([rID,body])
         return results
     elif key == 'from:':
-        rowID = rangeSearch('from-'+data,'from-'+data,em,cem)
-        emailList=[]
-        for rID in rowID:
-            record = re.get(rID.encode("utf-8"))
-            email = getText(record.decode("utf-8"),'subj')
-            emailList.append(email)
-        results = rowID + emailList
-        return results
+        pass
     elif key == 'to:':
         pass
     elif key == 'date:':
@@ -246,9 +241,9 @@ def rangeSearch(start,end,database,curs):
                 #x=str(record.decode("utf-8"))
                 returnsList.append(record.decode("utf-8"))
                 result = curs.next() 
-            return returnsList
+            return set(returnsList)
         else:
-            return returnsList
+            return set(returnsList)
         
     
 if __name__ == '__main__':
