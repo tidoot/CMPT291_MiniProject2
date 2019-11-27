@@ -26,7 +26,6 @@ def main():
     
     quit = False
     outputFull = False
-    
 
     while not quit:
         answer = input('Type "output=full" to view the full record. \nType "output=brief" to return to default view. \nType "q" to quit. \nPlease enter your queries: ')
@@ -44,7 +43,6 @@ def main():
             #START HERE!!!
             results = intersect(userQuery) #first, call intersect on the user's query that was parsed (now go to intersect function)
             
-            
             if outputFull==False:
                 #for every result(ID), search for the data in re file and print brief
                 for i in results:
@@ -53,6 +51,7 @@ def main():
             if outputFull==True:
                 #for every result(ID), search for the data in re file and print full
                 pass
+     
     cem.close()
     cte.close()
     cda.close()
@@ -66,9 +65,7 @@ def intersect(userQuery):
     #this function will get rowIDs found that matches all user's search queries
     #(dont change anything here)
     #go to getRecordIDs (renamed)
-    #userQuery is [[search sub,search term][sub,term]]
-    
-    
+    #userQuery is [[search sub,search term][sub,term]]    
     #start by getting first item as 'results'                
     results = getRecordIDs(userQuery[0][0],userQuery[0][1])
     for i in range(1, len(userQuery)):
@@ -77,20 +74,15 @@ def intersect(userQuery):
         #new results are the results that are in both 'results and 'r'
         results = set(results).intersection(r)
         # do this for all search query to find something that matches all   
-    return results
-    
+    return results 
         
 def getRecordIDs(key,data): #
     # NEED TO WORK ON THIS PART
-#Accesses the database and returns the record
-
-
+    #Accesses the database and returns the record
     #each of these will return rowIDs found for this user's search query, very simple oen line
     if key == 'subj:':
         rowID = rangeSearch('s-'+data,'s-'+data,te,cte)
-
         return rowID
-
     elif key == 'body:':
         rowID = rangeSearch('b-'+data,'b-'+data,te,cte)
         bodyList=[]
@@ -122,9 +114,6 @@ def getRecordIDs(key,data): #
         pass
     else:
         return 'Could not process query please try again'
-    
-
-
 
 def getText(line,tag):
     # Gets the text obtained between the given tag <tag></tag>
@@ -133,9 +122,7 @@ def getText(line,tag):
     startIndex = line.find(sTag) + len(sTag)
     endIndex = line.find(eTag)  
     text = line[startIndex:endIndex]
-    return text
-    
-    
+    return text  
         
 def getSubject(subject):
     filetext = 'rtest.txt'.readall()
@@ -239,7 +226,6 @@ def rangeSearch(start,end,database,curs):
             return set(returnsList)
         else:
             return set(returnsList)
-        
-    
+
 if __name__ == '__main__':
     main()
