@@ -3,25 +3,25 @@ import subprocess
 import re
 import time
 
-    da = db.DB()
-    em = db.DB()
-    te = db.DB()
-    re = db.DB()
+da = db.DB()
+em = db.DB()
+te = db.DB()
+re = db.DB()
+   
+da.set_flags(db.DB_DUP)
+em.set_flags(db.DB_DUP)
+te.set_flags(db.DB_DUP)
+re.set_flags(db.DB_DUP)
+      
+da.open('da.idx', None, db.DB_BTREE, db.DB_CREATE)
+em.open('em.idx', None, db.DB_BTREE, db.DB_CREATE)
+te.open('te.idx', None, db.DB_BTREE, db.DB_CREATE)
+re.open('re.idx', None, db.DB_HASH, db.DB_CREATE)
     
-    da.set_flags(db.DB_DUP)
-    em.set_flags(db.DB_DUP)
-    te.set_flags(db.DB_DUP)
-    re.set_flags(db.DB_DUP)
-       
-    da.open('da.idx', None, db.DB_BTREE, db.DB_CREATE)
-    em.open('em.idx', None, db.DB_BTREE, db.DB_CREATE)
-    te.open('te.idx', None, db.DB_BTREE, db.DB_CREATE)
-    re.open('re.idx', None, db.DB_HASH, db.DB_CREATE)
-    
-    cda = da.cursor()
-    cem = em.cursor()
-    cte = te.cursor()
-    cre = re.cursor()
+cda = da.cursor()
+cem = em.cursor()
+cte = te.cursor()
+cre = re.cursor()
     
 def main():   
     quit = False
