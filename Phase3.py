@@ -3,7 +3,6 @@ import subprocess
 import re
 import time
 
-def main():
     da = db.DB()
     em = db.DB()
     te = db.DB()
@@ -24,6 +23,7 @@ def main():
     cte = te.cursor()
     cre = re.cursor()
     
+def main():   
     quit = False
     outputFull = False
 
