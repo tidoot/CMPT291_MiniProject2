@@ -1,4 +1,6 @@
 from bsddb3 import db
+import datetime
+from datetime import *
 import subprocess
 import re
 import time
@@ -40,7 +42,6 @@ def main():
             quit=True
         else:
             userQuery = parseUserInput(answer.lower())
-            #START HERE!!!
             rowIdList = intersect(userQuery) #first, call intersect on the user's query that was parsed (now go to intersect function)
             results=[]
             for rowId in rowIdList:
@@ -50,10 +51,13 @@ def main():
                 elif outputFull:
                     body = record.decode('utf-8')
                 results.append([rowId,body])    
-            for i in results:
-                print(i[0]+', '+i[1])
+            if len(results)==0:
+                print('No results found. Please try again')
+            else:
+                for i in results:
+                    print(i[0]+', '+i[1])
             print()
-     
+
     cem.close()
     cte.close()
     cda.close()
@@ -65,9 +69,7 @@ def main():
 
 def intersect(userQuery): 
     #this function will get rowIDs found that matches all user's search queries
-    #(dont change anything here)
-    #go to getRecordIDs (renamed)
-    #userQuery is [[search sub,search term][sub,term]]    
+    #go to getRecordIDs (renamed)    
     #start by getting first item as 'results'                
     results = getRecordIDs(userQuery[0][0],userQuery[0][1])
     for i in range(1, len(userQuery)):
@@ -78,44 +80,69 @@ def intersect(userQuery):
         # do this for all search query to find something that matches all   
     return results 
         
-def getRecordIDs(key,data): #
-    # NEED TO WORK ON THIS PART
+def getRecordIDs(key,data): 
     #Accesses the database and returns the record
-    #each of these will return rowIDs found for this user's search query, very simple oen line
+    #each of these will return rowIDs found for this user's search query
     if key == 'subj:':
-        rowID = rangeSearch('s-'+data,'s-'+data,te,cte)
-        return rowID
+        if '%' in data:
+            rowID = rangeSearch('s-'+data,'s-'+data,te,cte, True)
+            return rowID
+        else:
+            rowID = rangeSearch('s-'+data,'s-'+data,te,cte)
+            return rowID
     elif key == 'body:':
-        rowID = rangeSearch('b-'+data,'b-'+data,te,cte)
-        return rowID
+        if '%' in data:
+            rowID = rangeSearch('b-'+data,'b-'+data,te,cte, True)
+            return rowID
+        else:
+            rowID = rangeSearch('b-'+data,'b-'+data,te,cte)
+            return rowID
     elif key == 'general:':
-        rowID = rangeSearch('b-'+data,'b-'+data,te,cte)
-        rowID2 = rangeSearch('s-'+data,'s-'+data,te,cte)
+        if '%' in data:
+            rowID = rangeSearch('b-'+data,'b-'+data,te,cte, True)
+            rowID2 = rangeSearch('s-'+data,'s-'+data,te,cte, True)
+        else:
+            rowID = rangeSearch('b-'+data,'b-'+data,te,cte)
+            rowID2 = rangeSearch('s-'+data,'s-'+data,te,cte)                    
         rowID = rowID.union(rowID2)
         return rowID
-        
     elif key == 'from:':
-        pass
+        rowID = rangeSearch('from-'+data,'from-'+data,em,cem)
+        return rowID
     elif key == 'to:':
-        pass
+        rowID = rangeSearch('to-'+data,'to-'+data,em,cem)
+        return rowID
     elif key == 'date:':
-        pass
+        rowID = rangeSearch(data,data,da,cda)
+        return rowID
     elif key == 'date>':
-        pass
+        data = datetime.strptime(data, '%Y/%m/%d')
+        date = str(datetime.date(data) + timedelta(days=1)).replace('-','/')
+        rowID = rangeSearch(date,'9999/12/31',da,cda, True)
+        return rowID
     elif key == 'date<':
-        pass    
+        data = datetime.strptime(data, '%Y/%m/%d')
+        date = str(datetime.date(data) - timedelta(days=1)).replace('-','/')
+        rowID = rangeSearch('0000/00/00',date,da,cda, True)
+        return rowID  
     elif key == 'date>=':
-        pass
+        rowID = rangeSearch(data,'9999/12/31',da,cda, True)
+        return rowID
     elif key == 'date<=':
-        pass    
+        rowID = rangeSearch('0000/00/00',data,da,cda, True)
+        return rowID 
     elif key == 'bcc:':
-        pass
+        rowID = rangeSearch('bcc-'+data,'bcc-'+data,em,cem)
+        return rowID
     elif key== 'cc:':
-        pass
-    elif '%' in data:
-        pass
+        rowID = rangeSearch('cc-'+data,'cc-'+data,em,cem)
+        return rowID
     else:
         return 'Could not process query please try again'
+
+def changeDate(date):
+        datetime.strptime(str(date), '%Y-%m-%d')
+
 
 def getText(line,tag):
     # Gets the text obtained between the given tag <tag></tag>
@@ -126,15 +153,7 @@ def getText(line,tag):
     text = line[startIndex:endIndex]
     return text  
         
-def getSubject(subject):
-    filetext = 'rtest.txt'.readall()
-    pattern = "<subj>" + subject
-    subjects = re.findall(pattern, filetext)
-    return subjects
 
-def getKey(idxLst):
-    for idx in idxLst:
-        db3.get(idx)
         
 def parseUserInput(line):
     subject = re.findall('subj[ ]*:[ ]*[^ ]*', line)
@@ -206,26 +225,31 @@ def parseUserInput(line):
         returnGroup.append(splitGroup)
     return returnGroup
 
-def rangeSearch(start,end,database,curs):
+def rangeSearch(start,end,database,curs, partial = False):
     while(True):
         returnsList=[]
-        Starting_Name = start
-        Ending_Name = end
+        Starting_Name = str(start).replace('%','')
+        Ending_Name = str(end).replace('%','')
         
         #get the record that has the smallest key greater than or equal to the Starting Name:
-        result = curs.set_range(Starting_Name.encode("utf-8")) 
-       
+        result=curs.set_range(Starting_Name.encode("utf-8"))
+            
         if(result != None):
             while(result != None):
                 #Checking the end condition: If the results comes after(or equal to) Ending_Name
                 if(str(result[0].decode("utf-8")[0:len(Ending_Name)])>Ending_Name): 
                     break
-                returnsList.append(result[1].decode("utf-8"))
-                result = curs.next() 
+                if partial:
+                    returnsList.append(result[1].decode("utf-8"))
+                elif partial == False:
+                    if re.match(Starting_Name + '$',result[0].decode("utf-8")):
+                        returnsList.append(result[1].decode("utf-8"))
+                result = curs.next()
                 
             return set(returnsList)
         else:
             return set(returnsList)
+
 
 if __name__ == '__main__':
     main()
