@@ -6,22 +6,22 @@ import time
 da = db.DB()
 em = db.DB()
 te = db.DB()
-re = db.DB()
+rec = db.DB()
 
 da.set_flags(db.DB_DUP)
 em.set_flags(db.DB_DUP)
 te.set_flags(db.DB_DUP)
-re.set_flags(db.DB_DUP)
+rec.set_flags(db.DB_DUP)
    
 da.open('da.idx', None, db.DB_BTREE, db.DB_CREATE)
 em.open('em.idx', None, db.DB_BTREE, db.DB_CREATE)
 te.open('te.idx', None, db.DB_BTREE, db.DB_CREATE)
-re.open('re.idx', None, db.DB_HASH, db.DB_CREATE)
+rec.open('re.idx', None, db.DB_HASH, db.DB_CREATE)
 
 cda = da.cursor()
 cem = em.cursor()
 cte = te.cursor()
-cre = re.cursor()
+cre = rec.cursor()
     
 def main():   
     quit = False
@@ -44,12 +44,12 @@ def main():
             rowIdList = intersect(userQuery) #first, call intersect on the user's query that was parsed (now go to intersect function)
             results=[]
             for rowId in rowIdList:
-                record = re.get(rowId.encode('utf-8'))
+                record = rec.get(rowId.encode('utf-8'))
                 if outputFull==False:
                     body = getText(record.decode('utf-8'), 'subj')
                 elif outputFull:
                     body = record.decode('utf-8')
-                results.append([rID,body])    
+                results.append([rowId,body])    
             for i in results:
                 print(i[0]+', '+i[1])
      
@@ -83,10 +83,18 @@ def getRecordIDs(key,data): #
     #each of these will return rowIDs found for this user's search query, very simple oen line
     if key == 'subj:':
         rowID = rangeSearch('s-'+data,'s-'+data,te,cte)
+        print(rowID)
         return rowID
     elif key == 'body:':
         rowID = rangeSearch('b-'+data,'b-'+data,te,cte)
-        return results
+        print(rowID)
+        return rowID
+    elif key == 'general:':
+        rowID = rangeSearch('b-'+data,'b-'+data,te,cte)
+        rowID2 = rangeSearch('s-'+data,'s-'+data,te,cte)
+        rowID = rowID.union(rowID2)
+        return rowID
+        
     elif key == 'from:':
         pass
     elif key == 'to:':
