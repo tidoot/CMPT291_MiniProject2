@@ -14,11 +14,8 @@ def main():
 
     #Starts the timer
     start =time.time()
-    strings = file.read().splitlines()
-    file.close()
-
-    # Main for loop that gets the text information and writes to files
-    for line in strings:
+    line = file.readline()
+    while line:
         if line.startswith("<mail>"):
             rowID = getText(line,'row')
             subj = getText(line,'subj')
@@ -37,6 +34,9 @@ def main():
             emailsTxt("bcc", bcc, rowID)
             dateTxt(date,rowID)
             recsTxt(rowID,line)
+        line = file.readline()
+        
+    file.close()
     
     #Stops the timer and prints time
     end=time.time()
