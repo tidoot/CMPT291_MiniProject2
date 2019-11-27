@@ -47,9 +47,6 @@ def main():
             
             if outputFull==False:
                 #for every result(ID), search for the data in re file and print brief
-                for id in row ids:
-                    get id, re.idx
-                    
                 for i in results:
                     print(i[0]+', '+i[1])
                 print()
