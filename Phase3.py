@@ -4,52 +4,6 @@ import re
 import time
 
 def main():
-    quit = False
-    outputFull = False
-    
-
-    while not quit:
-        answer = input('Type "output=full" to view the full record. \nType "output=brief" to return to default view. \nType "q" to quit. \nPlease enter your queries: ')
-        answer = answer.lower()
-        if answer == 'output=full':
-            outputFull = True
-            print('-------------\nOutput has been changed to full view.\n')
-        elif answer == 'output=brief':
-            outputFull = False
-            print('-------------\nOutput has been changed to brief view.\n')
-        elif answer == 'q':
-            quit=True
-        else:
-            record = parseUserInput(answer)
-            #record is a list of search query lists e.g [[subj:gas][body:whale]]
-            if outputFull==False:
-                #start by getting first item as 'results'                
-                results = intersect(record)
-                #for i in list:
-                    #i = str(i.decode("utf-8"))
-                
-                for i in results:
-                    print(i[0]+', '+i[1])
-                print()
-            if outputFull==True:
-                pass
-    
-    
-def intersect(record):
-    #start by getting first item as 'results'                
-    results = getRecordsBrief(record[0][0],record[0][1])
-    for i in range(1, len(record)):
-        #now get second-last items from record as 'r'
-        r = getRecordsBrief(record[i][0],record[i][1])
-        #new results are the results that are in both 'results and 'r'
-        results = set(results).intersection(r)
-        # do this for all search query to find something that matches all   
-    return results
-    
-        
-def getRecordsBrief(key,data):
-    # NEED TO WORK ON THIS PART
-#Accesses the database and returns the record
     da = db.DB()
     em = db.DB()
     te = db.DB()
@@ -69,16 +23,76 @@ def getRecordsBrief(key,data):
     cem = em.cursor()
     cte = te.cursor()
     cre = re.cursor()
+    
+    quit = False
+    outputFull = False
+    
 
+    while not quit:
+        answer = input('Type "output=full" to view the full record. \nType "output=brief" to return to default view. \nType "q" to quit. \nPlease enter your queries: ')
+        answer = answer.lower()
+        if answer == 'output=full':
+            outputFull = True
+            print('-------------\nOutput has been changed to full view.\n')
+        elif answer == 'output=brief':
+            outputFull = False
+            print('-------------\nOutput has been changed to brief view.\n')
+        elif answer == 'q':
+            quit=True
+        else:
+            userQuery = parseUserInput(answer)
+            #START HERE!!!
+            results = intersect(userQuery) #first, call intersect on the user's query that was parsed (now go to intersect function)
+            
+            
+            if outputFull==False:
+                #for every result(ID), search for the data in re file and print brief
+                for id in row ids:
+                    get id, re.idx
+                    
+                for i in results:
+                    print(i[0]+', '+i[1])
+                print()
+            if outputFull==True:
+                #for every result(ID), search for the data in re file and print full
+                pass
+    cem.close()
+    cte.close()
+    cda.close()
+    cre.close()
+    re.close()
+    da.close()
+    te.close()
+    em.close()    
+
+def intersect(userQuery): 
+    #this function will get rowIDs found that matches all user's search queries
+    #(dont change anything here)
+    #go to getRecordIDs (renamed)
+    #userQuery is [[search sub,search term][sub,term]]
+    
+    
+    #start by getting first item as 'results'                
+    results = getRecordIDs(userQuery[0][0],userQuery[0][1])
+    for i in range(1, len(userQuery)):
+        #now get second-last items from record as 'r'
+        r = getRecordIDs(userQuery[i][0],userQuery[i][1])
+        #new results are the results that are in both 'results and 'r'
+        results = set(results).intersection(r)
+        # do this for all search query to find something that matches all   
+    return results
+    
+        
+def getRecordIDs(key,data): #
+    # NEED TO WORK ON THIS PART
+#Accesses the database and returns the record
+
+
+    #each of these will return rowIDs found for this user's search query, very simple oen line
     if key == 'subj:':
         rowID = rangeSearch('s-'+data,'s-'+data,te,cte)
-        subjList=[]
-        results=[]
-        for rID in rowID:
-            record = re.get(rID.encode("utf-8"))
-            subject = getText(record.decode("utf-8"),'subj')
-            results.append([rID,subject])
-        return results
+
+        return rowID
 
     elif key == 'body:':
         rowID = rangeSearch('b-'+data,'b-'+data,te,cte)
@@ -113,15 +127,7 @@ def getRecordsBrief(key,data):
         return 'Could not process query please try again'
     
 
-    
-    cem.close()
-    cte.close()
-    cda.close()
-    cre.close()
-    re.close()
-    da.close()
-    te.close()
-    em.close()
+
 
 def getText(line,tag):
     # Gets the text obtained between the given tag <tag></tag>
