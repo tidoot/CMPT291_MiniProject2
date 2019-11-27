@@ -3,25 +3,25 @@ import subprocess
 import re
 import time
 
-    da = db.DB()
-    em = db.DB()
-    te = db.DB()
-    re = db.DB()
-    
-    da.set_flags(db.DB_DUP)
-    em.set_flags(db.DB_DUP)
-    te.set_flags(db.DB_DUP)
-    re.set_flags(db.DB_DUP)
-       
-    da.open('da.idx', None, db.DB_BTREE, db.DB_CREATE)
-    em.open('em.idx', None, db.DB_BTREE, db.DB_CREATE)
-    te.open('te.idx', None, db.DB_BTREE, db.DB_CREATE)
-    re.open('re.idx', None, db.DB_HASH, db.DB_CREATE)
-    
-    cda = da.cursor()
-    cem = em.cursor()
-    cte = te.cursor()
-    cre = re.cursor()
+da = db.DB()
+em = db.DB()
+te = db.DB()
+re = db.DB()
+
+da.set_flags(db.DB_DUP)
+em.set_flags(db.DB_DUP)
+te.set_flags(db.DB_DUP)
+re.set_flags(db.DB_DUP)
+   
+da.open('da.idx', None, db.DB_BTREE, db.DB_CREATE)
+em.open('em.idx', None, db.DB_BTREE, db.DB_CREATE)
+te.open('te.idx', None, db.DB_BTREE, db.DB_CREATE)
+re.open('re.idx', None, db.DB_HASH, db.DB_CREATE)
+
+cda = da.cursor()
+cem = em.cursor()
+cte = te.cursor()
+cre = re.cursor()
     
 def main():   
     quit = False
@@ -41,16 +41,17 @@ def main():
         else:
             userQuery = parseUserInput(answer)
             #START HERE!!!
-            results = intersect(userQuery) #first, call intersect on the user's query that was parsed (now go to intersect function)
-            
-            if outputFull==False:
-                #for every result(ID), search for the data in re file and print brief
-                for i in results:
-                    print(i[0]+', '+i[1])
-                print()
-            if outputFull==True:
-                #for every result(ID), search for the data in re file and print full
-                pass
+            rowIdList = intersect(userQuery) #first, call intersect on the user's query that was parsed (now go to intersect function)
+            results=[]
+            for rowId in rowIdList:
+                record = re.get(rowId.encode('utf-8'))
+                if outputFull==False:
+                    body = getText(record.decode('utf-8'), 'subj')
+                elif outputFull:
+                    body = record.decode('utf-8')
+                results.append([rID,body])    
+            for i in results:
+                print(i[0]+', '+i[1])
      
     cem.close()
     cte.close()
@@ -85,12 +86,6 @@ def getRecordIDs(key,data): #
         return rowID
     elif key == 'body:':
         rowID = rangeSearch('b-'+data,'b-'+data,te,cte)
-        bodyList=[]
-        results=[]
-        for rID in rowID:
-            record = re.get(rID.encode("utf-8"))
-            body = getText(record.decode("utf-8"),'subj')
-            results.append([rID,body])
         return results
     elif key == 'from:':
         pass
