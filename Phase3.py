@@ -39,7 +39,7 @@ def main():
         elif answer == 'q':
             quit=True
         else:
-            userQuery = parseUserInput(answer)
+            userQuery = parseUserInput(answer.lower())
             #START HERE!!!
             rowIdList = intersect(userQuery) #first, call intersect on the user's query that was parsed (now go to intersect function)
             results=[]
@@ -52,12 +52,13 @@ def main():
                 results.append([rowId,body])    
             for i in results:
                 print(i[0]+', '+i[1])
+            print()
      
     cem.close()
     cte.close()
     cda.close()
     cre.close()
-    re.close()
+    rec.close()
     da.close()
     te.close()
     em.close()    
@@ -83,11 +84,9 @@ def getRecordIDs(key,data): #
     #each of these will return rowIDs found for this user's search query, very simple oen line
     if key == 'subj:':
         rowID = rangeSearch('s-'+data,'s-'+data,te,cte)
-        print(rowID)
         return rowID
     elif key == 'body:':
         rowID = rangeSearch('b-'+data,'b-'+data,te,cte)
-        print(rowID)
         return rowID
     elif key == 'general:':
         rowID = rangeSearch('b-'+data,'b-'+data,te,cte)
@@ -221,11 +220,9 @@ def rangeSearch(start,end,database,curs):
                 #Checking the end condition: If the results comes after(or equal to) Ending_Name
                 if(str(result[0].decode("utf-8")[0:len(Ending_Name)])>Ending_Name): 
                     break
-                #x=str(result[0].decode("utf-8"))
-                record = database.get(result[0])
-                #x=str(record.decode("utf-8"))
-                returnsList.append(record.decode("utf-8"))
+                returnsList.append(result[1].decode("utf-8"))
                 result = curs.next() 
+                
             return set(returnsList)
         else:
             return set(returnsList)
