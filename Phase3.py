@@ -29,6 +29,7 @@ def main():
     quit = False
     outputFull = False
 
+    #Main interface
     while not quit:
         answer = input('Type "output=full" to view the full record. \nType "output=brief" to return to default view. \nType "q" to quit. \nPlease enter your queries: ')
         answer = answer.lower()
@@ -40,6 +41,8 @@ def main():
             print('-------------\nOutput has been changed to brief view.\n')
         elif answer == 'q':
             quit=True
+        elif len(answer)==0:
+            print()
         else:
             userQuery = parseUserInput(answer.lower())
             rowIdList = intersect(userQuery) #first, call intersect on the user's query that was parsed (now go to intersect function)
@@ -69,7 +72,7 @@ def main():
 
 def intersect(userQuery): 
     #this function will get rowIDs found that matches all user's search queries
-    #go to getRecordIDs (renamed)    
+    #go to getRecordIDs   
     #start by getting first item as 'results'                
     results = getRecordIDs(userQuery[0][0],userQuery[0][1])
     for i in range(1, len(userQuery)):
@@ -156,6 +159,7 @@ def getText(line,tag):
 
         
 def parseUserInput(line):
+    #Removes and strips any whitespaces before and after ":"
     subject = re.findall('subj[ ]*:[ ]*[^ ]*', line)
     for match in subject:
         line = line.replace(match,'')
@@ -226,6 +230,7 @@ def parseUserInput(line):
     return returnGroup
 
 def rangeSearch(start,end,database,curs, partial = False):
+    #Gets the rowID from parsed user input
     while(True):
         returnsList=[]
         Starting_Name = str(start).replace('%','')
@@ -236,7 +241,7 @@ def rangeSearch(start,end,database,curs, partial = False):
             
         if(result != None):
             while(result != None):
-                #Checking the end condition: If the results comes after(or equal to) Ending_Name
+                #Checking the end condition: If the results comes after sEnding_Name
                 if(str(result[0].decode("utf-8")[0:len(Ending_Name)])>Ending_Name): 
                     break
                 if partial:
