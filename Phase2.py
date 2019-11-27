@@ -40,13 +40,20 @@ def parseFile(file):
     f = open(file,'r')
     dataList = []
     keyList = []
-    lines = f.read().splitlines()
-    for line in lines:
-        key,data = line.split(':', 1) #split at first occurance of semicolon only, applicable for recs
-        key = key.replace('\\','') #remove backslash
-        data = data.replace('\\','')
-        dataList.append(data)
-        keyList.append(key)
+    #lines = f.read().splitlines()
+    lines = f.readline()
+    while lines:
+        split = lines.split(':',1)
+        if len(split)>1:
+            key = split[0]
+            data = split[1]
+        #key,data = lines.split(':',1) #split at first occurance of semicolon only, applicable for recs
+            key = key.replace('\\','') #remove backslash
+            data = data.replace('\\','')
+            data = data.replace('\n','')
+            dataList.append(data)
+            keyList.append(key) 
+        lines=f.readline()
     f.close()
     return dataList, keyList
 
